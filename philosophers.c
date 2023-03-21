@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:27:45 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/03/18 18:58:52 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:31:20 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,14 @@ int create_pthread(t_data	*data)
 {
 	int i;
 
+	i = 0;
 	data->philo = malloc(sizeof(pthread_t) * (data->number_of_philosophers + 1));
 	if(!data->philo)
 		return(0);
 	i = -1;/*
-	while (++i < data->number_of_philosophers) // have to create every pthread and put in the philo structure
+	while (++i < data->number_of_philosophers)	// have to create every pthread and put in the philo structure
 	{
-		data->philo[i] = data
+		pthread_create(data->philo[i], NULL, function, NULL);
 	}*/
 	return (1);
 }

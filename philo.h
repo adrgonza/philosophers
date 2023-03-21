@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:45:46 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/03/15 20:13:43 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/03/21 17:30:04 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <limits.h>
 
 typedef struct philo{
-
+	int i;
 }				t_philo;
 
 typedef struct data{
@@ -35,5 +35,6 @@ typedef struct data{
 }				t_data;
 
 int	ft_atoi(const char *str);
+int create_pthread(t_data	*data);
 
 #endif
