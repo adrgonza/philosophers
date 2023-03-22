@@ -1,7 +1,7 @@
 NAME = philo
-CC = gcc -Wall -Wextra -Werror
+CC = gcc 
 RM = rm -f
-SRC = philosophers.c philo_utils.c\
+SRC = philosophers.c philo_utils.c philo_jargon.c\
 
 OBJ = $(SRC:.c=.o)
 

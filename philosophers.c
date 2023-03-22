@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:27:45 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/03/21 17:31:20 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/03/23 00:17:18 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,23 @@ int create_pthread(t_data	*data)
 {
 	int i;
 
-	i = 0;
-	data->philo = malloc(sizeof(pthread_t) * (data->number_of_philosophers + 1));
-	if(!data->philo)
+	data->philosophers = malloc(sizeof(pthread_t) * (data->number_of_philosophers + 1)); //aray de philos
+	if(!data->philosophers)
 		return(0);
-	i = -1;/*
+	i = -1;
 	while (++i < data->number_of_philosophers)	// have to create every pthread and put in the philo structure
 	{
-		pthread_create(data->philo[i], NULL, function, NULL);
-	}*/
+		data->philo = malloc(sizeof(t_philo)); //reservo para cada estructura de cada filo
+    	if (!data->philo)
+        	return (0);
+		data->philo->phnb = i + 1; // id de cada filo
+		pthread_create(&data->philosophers[i], NULL, theres_hunger, data); // creacionde cada hilo
+		usleep(70);
+	}
 	return (1);
 }
 
-int check_param(int argc, char **argv, t_data	*data)
+int check_param(int argc, char **argv, t_data	*data) // need to check max int
 {
 	int i;
 	int j;
@@ -38,10 +42,11 @@ int check_param(int argc, char **argv, t_data	*data)
 	{
 		i = -1;
 		while (argv[j][++i])
-			if (argv[j][i] <= '0' || argv[j][i] >= '9')
+			if (argv[j][i] < '0' || argv[j][i] > '9')
 				return (0);
 	}
-	data->number_of_philosophers = ft_atoi(argv[1]); //save every value in each variable
+	gettimeofday(&data->start_time, NULL);  //save every value in each variable
+	data->number_of_philosophers = ft_atoi(argv[1]);
 	data->time_to_die = ft_atoi(argv[2]);
 	data->time_to_eat = ft_atoi(argv[3]);
 	data->time_sleep = ft_atoi(argv[4]);
