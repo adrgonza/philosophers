@@ -6,17 +6,46 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:27:45 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/03/23 00:17:18 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/03/23 15:57:36 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+
+void	ft_exit(t_data *data)
+{
+	free(data->philosophers);
+	exit(0);
+}
+
+int	ft_atoi(const char *str)
+{
+	int	i;
+	int	nb;
+	int	sign;
+
+	i = 0;
+	nb = 0;
+	sign = 1;
+	while ((str[i] == ' ') || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-')
+		sign = -1;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9')
+		nb = (str[i++] - '0') + nb * 10;
+	return (sign * nb);
+}
 int create_pthread(t_data	*data)
 {
 	int i;
 
-	data->philosophers = malloc(sizeof(pthread_t) * (data->number_of_philosophers + 1)); //aray de philos
+	data->forks = malloc((sizeof(pthread_mutex_t) * data->number_of_philosophers));  //array de mutex
+	if (!data->forks)
+		return (0);
+	data->philosophers = malloc(sizeof(pthread_t) * (data->number_of_philosophers)); //aray de philos
 	if(!data->philosophers)
 		return(0);
 	i = -1;
@@ -26,8 +55,9 @@ int create_pthread(t_data	*data)
     	if (!data->philo)
         	return (0);
 		data->philo->phnb = i + 1; // id de cada filo
+		pthread_mutex_init(&data->forks[i], NULL); // mutex creation
 		pthread_create(&data->philosophers[i], NULL, theres_hunger, data); // creacionde cada hilo
-		usleep(70);
+		usleep(100);
 	}
 	return (1);
 }
@@ -63,4 +93,5 @@ int main (int argc, char **argv)
 
 	if (argc < 5 || argc > 6 || !check_param(argc, argv, &data))
 		return (printf("Error"));
+	return (0);
 }

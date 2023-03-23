@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:45:46 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/03/23 00:11:17 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/03/23 15:34:06 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct data{
 	int			number_of_times_each_philosopher_must_eat;
 	int 		number_of_philosophers;
 	struct timeval	start_time;
+	pthread_mutex_t	*forks;
 	pthread_t	*philosophers;
 	t_philo		*philo;
 }	t_data;

@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:22:49 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/03/23 00:34:23 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/03/23 15:52:55 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,19 @@
 void	*not_thinking(t_data *data)
 {
 	printf("xms philo %d is thinking\n", data->philo->phnb);
-	theres_hunger(data);
-	return (NULL);
+	return (theres_hunger(data));
 }
 
 void	*guys_are_tired(t_data *data)
 {
 	printf("xms philo %d is sleeping\n", data->philo->phnb);
-	not_thinking(data);
-	return (NULL);
+	return (not_thinking(data));
 }
 
 void	*lunch_time(t_data *data)
 {
 	printf("xms philo %d is eating\n", data->philo->phnb);
-	guys_are_tired(data);
-	return(NULL);
+	return (guys_are_tired(data));
 }
 
 void	*theres_hunger(void	*arg)
@@ -38,8 +35,9 @@ void	*theres_hunger(void	*arg)
 	t_data *data;
 
 	data = arg;
-	printf("xms philo %d has taken a fork\n", data->philo->phnb);
-	lunch_time(data);
-	return (NULL);
+	while(1)
+	{
+		printf("xms philo %d has taken a fork\n", data->philo->phnb);
+		return (lunch_time(data));
+	}
 }
-
