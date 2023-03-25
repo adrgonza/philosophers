@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:45:46 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/03/23 15:34:06 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/03/25 16:58:26 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@
 #include <sys/time.h>
 
 typedef struct philo{
-	int phnb;
+	int	phnb;
+	pthread_mutex_t	left_fork;
+	pthread_mutex_t	right_fork;
 }	t_philo;
 
 typedef struct data{
@@ -39,6 +41,6 @@ typedef struct data{
 
 int	ft_atoi(const char *str);
 int create_pthread(t_data	*data);
-void	*theres_hunger(void	*arg);
+void	*philo_actions(void	*arg);
 
 #endif
