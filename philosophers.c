@@ -6,18 +6,11 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:27:45 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/03/25 18:01:33 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/03/27 01:35:30 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-
-void	ft_exit(t_data *data)
-{
-	free(data->philosophers);
-	exit(0);
-}
 
 int	ft_atoi(const char *str) /* atoi recreation */
 {
@@ -38,6 +31,29 @@ int	ft_atoi(const char *str) /* atoi recreation */
 		nb = (str[i++] - '0') + nb * 10;
 	return (sign * nb);
 }
+
+void	*philo_actions(void	*arg)
+{
+	t_data *data;
+
+	data = arg;
+	while(1)
+	{
+		pthread_mutex_lock(&data->philo->left_fork); /* lock left fork */
+		printf("xms philo %d has taken a fork\n", data->philo->phnb); /* take left fork */
+		pthread_mutex_lock(&data->philo->right_fork); /* lock right fork */
+		printf("xms philo %d has taken a fork\n", data->philo->phnb); /* take right fork */
+		printf("xms philo %d is eating\n", data->philo->phnb); /* print id eating */
+		usleep(data->time_to_eat * 1000); /* wait the time to eat */
+		pthread_mutex_unlock(&data->philo->left_fork); /* release left fork */
+		pthread_mutex_unlock(&data->philo->right_fork);	/* release right fork */
+		printf("xms philo %d is sleeping\n", data->philo->phnb); /* print is sleeping */
+		usleep(data->time_sleep * 1000); /* wait time for sleep */
+		printf("xms philo %d is thinking\n", data->philo->phnb); /* print is thinking */
+	}
+	return (NULL);
+}
+
 int create_pthread(t_data	*data)
 {
 	int i;
@@ -47,7 +63,7 @@ int create_pthread(t_data	*data)
 		return (0);
 	data->philosophers = malloc(sizeof(pthread_t) * (data->number_of_philosophers)); /* allocate memory for threads */
 	if(!data->philosophers)
-		return(0);
+		return(free(data->forks), 0); /* free mutex and return 0 */
 	i = -1;
 	while (++i < data->number_of_philosophers)	/* have to create every pthread and put in the philo structure*/
 	{
@@ -59,7 +75,7 @@ int create_pthread(t_data	*data)
 		data->philo[i].right_fork = data->forks[i + 1];
 		pthread_mutex_init(&data->forks[i], NULL); /* mutex creation */
 		pthread_create(&data->philosophers[i], NULL, philo_actions, data); /* creating every pthread */
-		usleep(100);
+		usleep(800);
 	}
 	return (1);
 }
@@ -93,7 +109,13 @@ int main (int argc, char **argv)
 
 	if (argc < 5 || argc > 6 || !check_param(argc, argv, &data))
 		return (printf("Error"));
-	if (!create_pthread(&data))
-		return (0);
+	create_pthread(&data);
+	if(data.forks)
+		free(data.forks);
+	if(data.philosophers)
+		free(data.philosophers);
+	if (data.philo)
+		free(data.philo);
+	exit(0);
 	return (0);
 }
