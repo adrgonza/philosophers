@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:27:45 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/03/27 01:35:30 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/03/27 02:23:23 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,16 @@ void	*philo_actions(void	*arg)
 	while(1)
 	{
 		pthread_mutex_lock(&data->philo->left_fork); /* lock left fork */
-		printf("xms philo %d has taken a fork\n", data->philo->phnb); /* take left fork */
+		print_status(data->philo->id, "has taken a fork", data); /* take left fork */
 		pthread_mutex_lock(&data->philo->right_fork); /* lock right fork */
-		printf("xms philo %d has taken a fork\n", data->philo->phnb); /* take right fork */
-		printf("xms philo %d is eating\n", data->philo->phnb); /* print id eating */
+		print_status(data->philo->id, "has taken a fork", data); /* take right fork */
+		print_status(data->philo->id, "is eating", data); /* print id eating */
 		usleep(data->time_to_eat * 1000); /* wait the time to eat */
 		pthread_mutex_unlock(&data->philo->left_fork); /* release left fork */
 		pthread_mutex_unlock(&data->philo->right_fork);	/* release right fork */
-		printf("xms philo %d is sleeping\n", data->philo->phnb); /* print is sleeping */
+		print_status(data->philo->id, "is sleeping", data); /* print is sleeping */
 		usleep(data->time_sleep * 1000); /* wait time for sleep */
-		printf("xms philo %d is thinking\n", data->philo->phnb); /* print is thinking */
+		print_status(data->philo->id, "is thinking", data); /* print is thinking */
 	}
 	return (NULL);
 }
@@ -70,7 +70,7 @@ int create_pthread(t_data	*data)
 		data->philo = malloc(sizeof(t_philo)); /* allocate memory for every strucuture who is gonna be sent to every thread */
     	if (!data->philo)
         	return (0);
-		data->philo->phnb = i + 1; /* philo id */
+		data->philo->id = i + 1; /* philo id */
 		data->philo[i].left_fork = data->forks[i]; /* putting every fork in a fork variable */
 		data->philo[i].right_fork = data->forks[i + 1];
 		pthread_mutex_init(&data->forks[i], NULL); /* mutex creation */
