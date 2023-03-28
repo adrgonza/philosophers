@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:27:45 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/03/27 02:23:23 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/03/28 02:15:14 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,16 @@ void	*philo_actions(void	*arg)
 	while(1)
 	{
 		pthread_mutex_lock(&data->philo->left_fork); /* lock left fork */
-		print_status(data->philo->id, "has taken a fork", data); /* take left fork */
+		printf("xms philo %d has taken a fork\n", data->philo->id); /* take left fork */
 		pthread_mutex_lock(&data->philo->right_fork); /* lock right fork */
-		print_status(data->philo->id, "has taken a fork", data); /* take right fork */
-		print_status(data->philo->id, "is eating", data); /* print id eating */
+		printf("xms philo %d has taken a fork\n", data->philo->id); /* take right fork */
+		printf("xms philo %d is eating\n", data->philo->id); /* print id eating */
 		usleep(data->time_to_eat * 1000); /* wait the time to eat */
 		pthread_mutex_unlock(&data->philo->left_fork); /* release left fork */
 		pthread_mutex_unlock(&data->philo->right_fork);	/* release right fork */
-		print_status(data->philo->id, "is sleeping", data); /* print is sleeping */
+		printf("xms philo %d is sleeping\n", data->philo->id); /* print is sleeping */
 		usleep(data->time_sleep * 1000); /* wait time for sleep */
-		print_status(data->philo->id, "is thinking", data); /* print is thinking */
+		printf("xms philo %d is thinking\n", data->philo->id); /* print is thinking */
 	}
 	return (NULL);
 }
@@ -58,25 +58,29 @@ int create_pthread(t_data	*data)
 {
 	int i;
 
-	data->forks = malloc((sizeof(pthread_mutex_t) * data->number_of_philosophers));  /* allocate memory for mutex */
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->number_of_philosophers);  /* allocate memory for mutex */
 	if (!data->forks)
 		return (0);
 	data->philosophers = malloc(sizeof(pthread_t) * (data->number_of_philosophers)); /* allocate memory for threads */
 	if(!data->philosophers)
-		return(free(data->forks), 0); /* free mutex and return 0 */
+		return(0); /* free mutex and return 0 */
 	i = -1;
 	while (++i < data->number_of_philosophers)	/* have to create every pthread and put in the philo structure*/
 	{
-		data->philo = malloc(sizeof(t_philo)); /* allocate memory for every strucuture who is gonna be sent to every thread */
+		if (pthread_mutex_init(&data->forks[i], NULL)) /* mutex creation */
+			return (0);
+		data->philo = malloc(sizeof(t_philo) * data->number_of_philosophers); /* allocate memory for every strucuture who is gonna be sent to every thread */
     	if (!data->philo)
         	return (0);
 		data->philo->id = i + 1; /* philo id */
-		data->philo[i].left_fork = data->forks[i]; /* putting every fork in a fork variable */
-		data->philo[i].right_fork = data->forks[i + 1];
-		pthread_mutex_init(&data->forks[i], NULL); /* mutex creation */
+		data->philo[i].right_fork = data->forks[i];
+		data->philo[i].left_fork = data->forks[i + 1]; /* putting every fork in a fork variable */
+		if (data->philo->id == 1) /* give the last fork value to the first one */
+			data->philo[i].left_fork = data->forks[data->number_of_philosophers];
 		pthread_create(&data->philosophers[i], NULL, philo_actions, data); /* creating every pthread */
 		usleep(800);
 	}
+	while(1);
 	return (1);
 }
 
@@ -93,13 +97,15 @@ int check_param(int argc, char **argv, t_data	*data) /* need to check max int */
 			if (argv[j][i] < '0' || argv[j][i] > '9')
 				return (0);
 	}
-	gettimeofday(&data->start_time, NULL);  /* save every imput value in each variable */
-	data->number_of_philosophers = ft_atoi(argv[1]);
+	data->number_of_philosophers = ft_atoi(argv[1]); /* save every imput value in each variable */
 	data->time_to_die = ft_atoi(argv[2]);
 	data->time_to_eat = ft_atoi(argv[3]);
 	data->time_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		data->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
+		data->nb_times_philos_eat = ft_atoi(argv[5]);
+	else
+		data->nb_times_philos_eat = -1;
+	//data->current_time = get_time();
 	return(1);
 }
 
