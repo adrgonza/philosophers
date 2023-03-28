@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:45:46 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/03/27 02:19:47 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/03/28 02:43:08 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 
 typedef struct philo{
 	int	id;
-	pthread_mutex_t	left_fork;
-	pthread_mutex_t	right_fork;
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*right_fork;
 }	t_philo;
 
 typedef struct data{
@@ -32,12 +32,8 @@ typedef struct data{
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_sleep;
-	int				number_of_times_each_philosopher_must_eat;
+	int				nb_times_philos_eat;
 	int 			number_of_philosophers;
-	struct timeval	start_time;
-	time_t			tv_sec;
-	time_t			tv_usec;
-	long long		current_time;
 	pthread_mutex_t	*forks;
 	pthread_t		*philosophers;
 	t_philo			*philo;
