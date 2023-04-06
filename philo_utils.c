@@ -6,13 +6,13 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:24:40 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/04/05 15:00:38 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/04/06 18:38:45 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long long getMilliseconds()
+long long get_milliseconds()
 {
 	struct timeval timev;
 	gettimeofday(&timev, NULL);
