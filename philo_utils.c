@@ -6,18 +6,11 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:24:40 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/04/06 18:38:45 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/04/10 17:18:57 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-long long get_milliseconds()
-{
-	struct timeval timev;
-	gettimeofday(&timev, NULL);
-	return (timev.tv_sec * 1000) + (timev.tv_usec / 1000);
-}
 
 int	ft_atoi(const char *str) /* atoi recreation */
 {
@@ -39,4 +32,12 @@ int	ft_atoi(const char *str) /* atoi recreation */
 	if ((sign * nb) > 2147483647) /* check max int */
 		exit(0);
 	return (sign * nb);
+}
+
+long long timex(void)
+{
+	struct timeval timev;
+
+	gettimeofday(&timev, NULL);
+	return(timev.tv_sec * 1000) + (timev.tv_usec / 1000);
 }

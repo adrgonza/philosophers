@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:45:46 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/04/06 18:38:42 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/04/10 17:19:07 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,12 @@ typedef struct philo{
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	int				id;
+	int 			*bang;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_sleep;
 	int				nb_times_philos_eat;
+	long long		last_time_eat;
 	long long		star_time;
 }	t_philo;
 
@@ -41,8 +43,6 @@ typedef struct data{
 }	t_data;
 
 int		ft_atoi(const char *str);
-void	*philo_actions(void	*arg);
-void	print_status(int id, char *status, t_data *data);
-long long get_milliseconds();
+long long timex(void);
 
 #endif
