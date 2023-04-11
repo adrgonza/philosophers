@@ -6,13 +6,14 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:27:45 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/04/11 02:38:27 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/04/11 23:06:10 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /*
+-protect line 33
 -implement better death
 -fix leaks and pthreads problems
 */
@@ -65,11 +66,11 @@ void	*philo_actions(void	*arg)
 		printf("%lldms philo %d is eating\n", timex() - philo->star_time, philo->id); /* print is eating */
 		if (philo->times_eaten != -1)
 			philo->times_eaten++;
-		usleep(philo->time_to_eat * 1000); /* wait the time to eat */
+		ft_sleep(philo->time_to_eat); /* wait the time to eat */
 		pthread_mutex_unlock(philo->left_fork); /* release left fork */
 		pthread_mutex_unlock(philo->right_fork); /* release right fork */
 		printf("%lldms philo %d is sleeping\n", timex() - philo->star_time, philo->id); /* print is sleeping */
-		usleep(philo->time_sleep * 1000); /* wait time for sleep */
+		ft_sleep(philo->time_sleep); /* wait time for sleep */
 		printf("%lldms philo %d is thinking\n", timex() - philo->star_time, philo->id); /* print is thinking */
 	}
 }
@@ -78,9 +79,9 @@ void	create_pthread(t_data	*data, int argc, char **argv)
 {
 	int	i;
 
-	data->start_time = timex();  /* get the time at program start */
 	data->start_race = 0;
 	i = -1;
+	data->start_time = timex();  /* get the time at program start */
 	while (++i < data->number_of_philosophers) /* have to create every pthread and put in the philo structure*/
 	{
 		if (pthread_mutex_init(&(data->forks[i]), NULL)) /* mutex creation */

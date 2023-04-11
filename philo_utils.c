@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:24:40 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/04/10 17:18:57 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/04/11 23:08:29 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,19 @@ long long timex(void)
 
 	gettimeofday(&timev, NULL);
 	return(timev.tv_sec * 1000) + (timev.tv_usec / 1000);
+}
+
+void ft_sleep(int time)
+{
+	long long star_time;
+	long long act_time;
+
+	star_time = timex();
+	act_time = star_time;
+	while (star_time >= (act_time - time))
+	{
+		act_time = timex();
+		usleep(100);
+	}
+	return ;
 }

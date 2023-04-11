@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 00:45:46 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/04/11 02:03:00 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/04/11 20:59:35 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct data{
 	t_philo			*philo;
 }	t_data;
 
+void ft_sleep(int time);
 int		ft_atoi(const char *str);
 long long timex(void);
 
