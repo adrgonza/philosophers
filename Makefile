@@ -1,5 +1,5 @@
 NAME = philo
-CC = gcc -Wall -Wextra -Werror 
+CC = gcc -Wall -Wextra -Werror -fsanitize=address -g
 RM = rm -f
 SRC = philosophers.c philo_utils.c\
 

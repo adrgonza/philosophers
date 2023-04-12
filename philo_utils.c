@@ -6,13 +6,38 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:24:40 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/04/11 23:08:29 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/04/13 01:25:31 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_atoi(const char *str) /* atoi recreation */
+void ft_free(t_data *data, int nb)
+{
+	if (nb >= 2)
+		free(data->philo);
+	if (nb >= 3)
+		free(data->philosophers);
+	if (nb >= 4)
+		free(data->forks);
+	if (nb >= 5)
+		free(data->defender);
+}
+void	ft_destroy_threads(t_data *data)
+{
+	int i;
+
+	i = -1;
+	while (++i < data->philos_nb)
+	{
+		//pthread_join(data->philosophers[i], NULL);
+		pthread_mutex_unlock(&(data->defender[i]));
+		pthread_mutex_destroy(&(data->defender[i]));
+		pthread_mutex_unlock(&(data->forks[i]));
+		pthread_mutex_destroy(&(data->forks[i]));
+	}
+}
+int	ft_atoi_s(const char *str)
 {
 	long int	nb;
 	int			i;
@@ -29,30 +54,28 @@ int	ft_atoi(const char *str) /* atoi recreation */
 		i++;
 	while (str[i] >= '0' && str[i] <= '9')
 		nb = (str[i++] - '0') + nb * 10;
-	if ((sign * nb) > 2147483647) /* check max int */
-		exit(0);
+	if ((sign * nb) > 2147483647) /* Check max int. */
+		return (-1);
 	return (sign * nb);
 }
 
-long long timex(void)
+long long get_time(void)
 {
 	struct timeval timev;
 
 	gettimeofday(&timev, NULL);
 	return(timev.tv_sec * 1000) + (timev.tv_usec / 1000);
 }
-
-void ft_sleep(int time)
+void ft_sleep(int time) /* Safe usleep recreation. */
 {
 	long long star_time;
 	long long act_time;
 
-	star_time = timex();
+	star_time = get_time();
 	act_time = star_time;
 	while (star_time >= (act_time - time))
 	{
-		act_time = timex();
+		act_time = get_time();
 		usleep(100);
 	}
-	return ;
 }

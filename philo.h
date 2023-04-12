@@ -5,48 +5,53 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/14 00:45:46 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/04/11 20:59:35 by adrgonza         ###   ########.fr       */
+/*   Created: 2023/04/12 14:15:01 by adrgonza          #+#    #+#             */
+/*   Updated: 2023/04/12 23:32:04 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# include <pthread.h>
-# include <stdlib.h>
-# include <stdint.h>
 # include <unistd.h>
 # include <stdio.h>
-# include <limits.h>
+# include <stdlib.h>
+# include <pthread.h>
 # include <sys/time.h>
 
 typedef struct philo{
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
+	int				*start;
 	int				id;
-	int 			*start;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_sleep;
-	int				nb_times_philos_eat;
-	int				times_eaten;
+	int				nb_philos_eat;
 	int				alredy_eaten;
-	long long		last_time_eat;
+	int				times_eaten;
 	long long		star_time;
+	long long		last_time_eat;
+	pthread_mutex_t	*right_fork;
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*defender;
 }	t_philo;
 
-typedef struct data{
-	int 			number_of_philosophers;
+typedef struct data
+{
+	int				philos_nb;
+	int				nb_philos_eaten;
 	int				start_race;
 	long long		start_time;
-	pthread_mutex_t	*forks;
+	long long		act_time;
 	pthread_t		*philosophers;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	*defender;
 	t_philo			*philo;
-}	t_data;
+} t_data;
 
+int	ft_atoi_s(const char *str);
+long long get_time(void);
 void ft_sleep(int time);
-int		ft_atoi(const char *str);
-long long timex(void);
+void ft_free(t_data *data, int nb);
+void	ft_destroy_threads(t_data *data);
 
 #endif
