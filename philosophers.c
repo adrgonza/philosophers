@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:53:24 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/04/13 19:07:09 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/04/13 19:44:10 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	ft_get_values(t_data *data, int ac, char **av, int i)
 	data->philo[i].star_time = data->start_time;
 	data->philo[i].id = i + 1;
 	data->philo[i].stop = &(data->stop);
-	data->philo[i].start = &(data->start_race);
 	data->philo[i].right_fork = &(data->forks[i]);
 	data->philo[i].left_fork = &(data->forks[(i + 1) % (data->philos_nb)]);
 	data->philo[i].defender = &(data->defender[i]);
@@ -36,55 +35,55 @@ int	ft_get_values(t_data *data, int ac, char **av, int i)
 	data->philo[i].nb_philos_eat = -1;
 	if (ac == 6)
 		data->philo[i].nb_philos_eat = ft_atoi_s(av[5]);
-	return(1);
+	return (1);
 }
 
-int ft_create_threads(t_data *data, int ac, char **av)
+int	ft_create_threads(t_data *d, int ac, char **av)
 {
-	int i;
+	int	i;
 
 	i = -1;
-	pthread_mutex_lock(data->print_lock);
-	while (++i < data->philos_nb)
+	pthread_mutex_lock(d->print_lock);
+	while (++i < d->philos_nb)
 	{
-		if (!ft_get_values(data, ac, av, i))
+		if (!ft_get_values(d, ac, av, i))
 			return (0);
-		pthread_create(&(data->philosophers[i]), NULL, ft_philo_loop, &(data->philo[i]));
+		pthread_create(&(d->philosophers[i]), NULL, routine, &(d->philo[i]));
 	}
-	pthread_mutex_unlock(data->print_lock);
+	pthread_mutex_unlock(d->print_lock);
 	return (1);
 }
 
-int	ft_init_data(t_data *data, char **av)
+int	ft_init_data(t_data *d, char **av)
 {
-	data->philos_nb = ft_atoi_s(av[1]);
-	data->philo = malloc(sizeof(t_philo) * (data->philos_nb));
-	if (!data->philo)
+	d->philos_nb = ft_atoi_s(av[1]);
+	d->philo = malloc(sizeof(t_philo) * (d->philos_nb));
+	if (!d->philo)
 		return (0);
-	data->philosophers = malloc(sizeof(pthread_t) * (data->philos_nb));
-	if (!data->philosophers)
-		return(free(data->philo), 0);
-	data->forks = malloc(sizeof(pthread_mutex_t) * (data->philos_nb));
-	if (!data->forks)
-		return(free(data->philo), free(data->philosophers), 0);
-	data->defender = malloc(sizeof(pthread_mutex_t) * (data->philos_nb));
-	if (!data->defender)
-		return (free(data->philo), free(data->philosophers), free(data->forks), 0);
-	data->print_lock = malloc(sizeof(pthread_mutex_t) * 1);
-	data->stop = 1;
-	if (!data->print_lock)
+	d->philosophers = malloc(sizeof(pthread_t) * (d->philos_nb));
+	if (!d->philosophers)
+		return (free(d->philo), 0);
+	d->forks = malloc(sizeof(pthread_mutex_t) * (d->philos_nb));
+	if (!d->forks)
+		return (free(d->philo), free(d->philosophers), 0);
+	d->defender = malloc(sizeof(pthread_mutex_t) * (d->philos_nb));
+	if (!d->defender)
+		return (free(d->philo), free(d->philosophers), free(d->forks), 0);
+	d->print_lock = malloc(sizeof(pthread_mutex_t) * 1);
+	d->stop = 1;
+	if (!d->print_lock)
 	{
-		free(data->defender);
-		return (free(data->philo), free(data->philosophers), free(data->forks), 0);
+		free(d->defender);
+		return (free(d->philo), free(d->philosophers), free(d->forks), 0);
 	}
-	data->start_time = get_time();
+	d->start_time = get_time();
 	return (1);
 }
 
-int ft_check_args(int argc, char **argv)
+int	ft_check_args(int argc, char **argv)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	if (argc < 5 || argc > 6)
 		return (0);
@@ -99,14 +98,14 @@ int ft_check_args(int argc, char **argv)
 	if (!ft_atoi_s(argv[2]) || !ft_atoi_s(argv[3]) || !ft_atoi_s(argv[4]))
 		return (0);
 	if (argc == 6)
-		if(!ft_atoi_s(argv[5]))
+		if (!ft_atoi_s(argv[5]))
 			return (0);
 	return (1);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_data data;
+	t_data	data;
 
 	if (!ft_check_args(argc, argv))
 		return (printf("Error.\n"));
