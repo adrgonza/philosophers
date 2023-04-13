@@ -6,22 +6,19 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:24:40 by adrgonza          #+#    #+#             */
-/*   Updated: 2023/04/13 01:25:31 by adrgonza         ###   ########.fr       */
+/*   Updated: 2023/04/13 18:49:10 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void ft_free(t_data *data, int nb)
+void ft_free(t_data *data)
 {
-	if (nb >= 2)
-		free(data->philo);
-	if (nb >= 3)
-		free(data->philosophers);
-	if (nb >= 4)
-		free(data->forks);
-	if (nb >= 5)
-		free(data->defender);
+	free(data->philo);
+	free(data->philosophers);
+	free(data->forks);
+	free(data->defender);
+	free(data->print_lock);
 }
 void	ft_destroy_threads(t_data *data)
 {
@@ -30,11 +27,15 @@ void	ft_destroy_threads(t_data *data)
 	i = -1;
 	while (++i < data->philos_nb)
 	{
-		//pthread_join(data->philosophers[i], NULL);
-		pthread_mutex_unlock(&(data->defender[i]));
+		pthread_mutex_unlock(data->philo[i].defender);
+		pthread_join(data->philosophers[i], NULL);
+	}
+	i = -1;
+	while (++i < data->philos_nb)
+	{
 		pthread_mutex_destroy(&(data->defender[i]));
-		pthread_mutex_unlock(&(data->forks[i]));
 		pthread_mutex_destroy(&(data->forks[i]));
+		pthread_mutex_destroy(&(data->print_lock[i]));
 	}
 }
 int	ft_atoi_s(const char *str)
@@ -54,7 +55,7 @@ int	ft_atoi_s(const char *str)
 		i++;
 	while (str[i] >= '0' && str[i] <= '9')
 		nb = (str[i++] - '0') + nb * 10;
-	if ((sign * nb) > 2147483647) /* Check max int. */
+	if ((sign * nb) > 2147483647)
 		return (-1);
 	return (sign * nb);
 }
@@ -66,7 +67,7 @@ long long get_time(void)
 	gettimeofday(&timev, NULL);
 	return(timev.tv_sec * 1000) + (timev.tv_usec / 1000);
 }
-void ft_sleep(int time) /* Safe usleep recreation. */
+void ft_sleep(int time)
 {
 	long long star_time;
 	long long act_time;
@@ -78,4 +79,12 @@ void ft_sleep(int time) /* Safe usleep recreation. */
 		act_time = get_time();
 		usleep(100);
 	}
+}
+
+void ft_print(t_philo *philo, char *str)
+{
+	pthread_mutex_lock(philo->print_lock);
+	if (*(philo->stop) == 1)
+		printf("%lldms philo %d %s", get_time() - philo->star_time, philo->id, str);
+	pthread_mutex_unlock(philo->print_lock);
 }
